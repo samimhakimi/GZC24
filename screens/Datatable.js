@@ -17,21 +17,14 @@ function Datatable({header, datatable = [], page = 1, perPage = 5, style}) {
       .reduce((o, k) => (o || {})[k], object);
   };
 
-  useEffect(() => {
-    //console.log('useEffect:', state);
-  });
-
   return (
     <DataTable style={style}>
       <DataTable.Header>
         {header.map((item, i) => {
           let sortDirection = item.sortDirection ? item.sortDirection : false;
-          console.log(sortDirection);
+
           return (
-            <DataTable.Title
-              key={i}
-              //onClick={a => console.log('title', a)}
-              sortDirection={sortDirection}>
+            <DataTable.Title key={i} sortDirection={sortDirection}>
               {item.name}
             </DataTable.Title>
           );
@@ -58,7 +51,6 @@ function Datatable({header, datatable = [], page = 1, perPage = 5, style}) {
         page={state.page}
         numberOfPages={state.numberOfPages}
         onPageChange={page => {
-          console.log('change', page);
           setState({...state, page});
         }}
         label={state.page + 1 + ' of ' + state.numberOfPages}

@@ -222,7 +222,6 @@ const DeviceInfo = ({navigation, route}) => {
                 useCDN={true}
                 useSSL={true}
                 loader={true}
-                //
               />
             </View>
             <View
