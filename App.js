@@ -32,12 +32,14 @@ import HomeScreen from './screens/HomeScreen';
 import AddNewDeviceScreen from './screens/AddNewDeviceScreen';
 import EditDevice from './screens/EditDevice';
 import AccountScreen from './screens/AccountScreen';
+import ArchivedScreen from './screens/ArchivedScreeen';
 
 const HomeStack = createStackNavigator();
 const AddDevice = createStackNavigator();
 const ArchivedDevice = createStackNavigator();
 const Account = createStackNavigator();
 const Drawer = createDrawerNavigator();
+const ArchivedScreens = createStackNavigator();
 
 const HomeStackScreen = ({navigation}) => (
   <HomeStack.Navigator
@@ -154,6 +156,35 @@ const AccountStack = ({navigation}) => (
   </Account.Navigator>
 );
 
+const ArchivedScreen2 = ({navigation}) => (
+  <ArchivedScreens.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: '#1D1D1B',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }}>
+    <ArchivedScreens.Screen
+      name="ArchivedScreen"
+      component={ArchivedScreen}
+      options={{
+        title: 'ArchivedScreen',
+        headerLeft: () => (
+          <Icon3.Button
+            name="long-arrow-left"
+            size={30}
+            backgroundColor="#1D1D1B"
+            onPress={() => navigation.goBack()}
+          />
+        ),
+      }}
+    />
+  </ArchivedScreens.Navigator>
+);
+
 ///
 const App = () => {
   const initialLoginState = {
@@ -252,6 +283,10 @@ const App = () => {
               <Drawer.Screen
                 name="AddNewDeviceScreen"
                 component={AddNewDeviceStack}
+              />
+              <Drawer.Screen
+                name="ArchivedScreen"
+                component={ArchivedScreen2}
               />
               <Drawer.Screen
                 name="EditDevice"

@@ -39,6 +39,15 @@ export function DrawerContent(props) {
                 props.navigation.navigate('AddNewDeviceScreen');
               }}
             />
+            <DrawerItem
+              icon={({color, size}) => (
+                <Icon name="tablet" color={color} size={size} />
+              )}
+              label="Archived Screeen"
+              onPress={() => {
+                props.navigation.navigate('ArchivedScreen');
+              }}
+            />
 
             <DrawerItem
               icon={({color, size}) => (
