@@ -1,15 +1,47 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {color} from 'react-native-reanimated';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default function Devices({item, navigation}) {
+  useEffect(() => {
+    const fetchData = async () => {
+      const user_id = await AsyncStorage.getItem('id');
+      const api_key = await AsyncStorage.getItem('api_key');
+
+      setData({user_id: user_id, api_key: api_key});
+    };
+
+    fetchData();
+  }, []);
+
+  const [data, setData] = React.useState({
+    user_id: '',
+    api_key: '',
+  });
+
   var tempColor = item.last_alarm_status;
   if (tempColor == 'ok') {
     tempColor = 'green';
   } else {
     tempColor = 'red';
   }
+
+  handleDelete = async id => {
+    const userInfo = {
+      user_id: data.user_id,
+      api_key: data.api_key,
+    };
+    await axios
+      .put('https://www.gzc24.com/api-mobi/device/remove/' + id, userInfo)
+      .then(res => {
+        console.warn('Success');
+      })
+      .catch(err => {
+        console.warn('Error', id);
+      });
+  };
   return (
     <TouchableOpacity>
       <View style={styles.item}>
@@ -25,6 +57,14 @@ export default function Devices({item, navigation}) {
             {item.last_temperature ? item.last_temperature + ' °C' : ''}
           </Text>
           <View style={styles.buttonsView}>
+            <TouchableOpacity onPress={() => handleDelete(item.id)}>
+              <FontAwesome
+                style={{marginRight: 10}}
+                name="trash-o"
+                color="red"
+                size={25}
+              />
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 /* 1. Navigate to the Details route with params */
