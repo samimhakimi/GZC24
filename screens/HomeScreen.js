@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const HomeScreen = ({navigation}) => {
   useEffect(() => {
-    const fetchData = async () => {
+    var fetchData = async () => {
       const user_id = await AsyncStorage.getItem('id');
       const api_key = await AsyncStorage.getItem('api_key');
       if (user_id != null && api_key != null) {
@@ -26,7 +26,7 @@ const HomeScreen = ({navigation}) => {
     };
 
     fetchData();
-  }, []);
+  }, [devices]);
 
   const [devices, setDevices] = useState([]);
 

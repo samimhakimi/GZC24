@@ -33,6 +33,7 @@ import AddNewDeviceScreen from './screens/AddNewDeviceScreen';
 import EditDevice from './screens/EditDevice';
 import AccountScreen from './screens/AccountScreen';
 import ArchivedScreen from './screens/ArchivedScreeen';
+import DeviceInfo from './screens/DeviceInfor';
 
 const HomeStack = createStackNavigator();
 const AddDevice = createStackNavigator();
@@ -40,6 +41,7 @@ const ArchivedDevice = createStackNavigator();
 const Account = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const ArchivedScreens = createStackNavigator();
+const DeviceInfor = createStackNavigator();
 
 const HomeStackScreen = ({navigation}) => (
   <HomeStack.Navigator
@@ -292,6 +294,7 @@ const App = () => {
                 name="EditDevice"
                 component={ArchivedDevicesStack}
               />
+              <Drawer.Screen name="DeviceInfor" component={DeviceInfo} />
               <Drawer.Screen name="Account" component={AccountStack} />
             </Drawer.Navigator>
           ) : (

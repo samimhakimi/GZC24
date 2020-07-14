@@ -42,6 +42,7 @@ export default function Devices({item, navigation}) {
         console.warn('Error', id);
       });
   };
+
   return (
     <TouchableOpacity>
       <View style={styles.item}>
@@ -77,7 +78,12 @@ export default function Devices({item, navigation}) {
                 size={25}
               />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('DeviceInfor', {
+                  id: {id: item.id},
+                });
+              }}>
               <FontAwesome name="eye" color="black" size={25} />
             </TouchableOpacity>
           </View>
