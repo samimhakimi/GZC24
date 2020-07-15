@@ -43,7 +43,7 @@ export function DrawerContent(props) {
               icon={({color, size}) => (
                 <Icon name="tablet" color={color} size={size} />
               )}
-              label="Archived Screeen"
+              label="Archived Devices"
               onPress={() => {
                 props.navigation.navigate('ArchivedScreen');
               }}

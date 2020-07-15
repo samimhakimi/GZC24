@@ -147,6 +147,7 @@ const AddNewDeviceScreeen = ({navigation}) => {
         setTimeout(() => {
           Toast.hide(toast);
           Toast.show('Device added Succesfully...');
+          navigation.navigate('Home');
         }, 1000);
       })
       .catch(err => {

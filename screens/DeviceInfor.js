@@ -106,12 +106,12 @@ const DeviceInfor = ({route, navigation}) => {
           }
         })
         .catch(err => {
-          Alert.alert('All, Error Please try agian...');
+          Alert.alert('Network Error, Please try agian...');
         });
     };
 
     fetchData();
-  }, [device]);
+  }, []);
 
   const [page, setPage] = React.useState(1);
 
@@ -180,7 +180,7 @@ const DeviceInfor = ({route, navigation}) => {
                   followUserLocation={false}
                   provider={PROVIDER_GOOGLE}
                   zoomControlEnabled={true}
-                  //   zoomTapEnabled={true}
+                  zoomTapEnabled={true}
                   zoomControlEnabled={true}
                   region={{
                     latitude: parseFloat(lat) ? parseFloat(lat) : 12.12323,
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   map: {
-    height: '55%',
+    height: '60%',
     margin: 20,
     borderRadius: 10,
   },

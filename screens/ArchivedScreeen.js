@@ -38,7 +38,7 @@ const HomeScreen = ({navigation}) => {
       <StatusBar barStyle="light-content" />
       <View style={styles.content}>
         <View style={styles.list}>
-          {devices ? (
+          {devices && devices.length != 0 ? (
             <FlatList
               data={devices}
               renderItem={({item}) => (

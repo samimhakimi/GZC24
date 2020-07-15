@@ -37,11 +37,9 @@ import DeviceInfo from './screens/DeviceInfor';
 
 const HomeStack = createStackNavigator();
 const AddDevice = createStackNavigator();
-const ArchivedDevice = createStackNavigator();
 const Account = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const ArchivedScreens = createStackNavigator();
-const DeviceInfor = createStackNavigator();
 
 const HomeStackScreen = ({navigation}) => (
   <HomeStack.Navigator
@@ -101,34 +99,6 @@ const AddNewDeviceStack = ({navigation}) => (
   </AddDevice.Navigator>
 );
 
-const ArchivedDevicesStack = ({navigation}) => (
-  <ArchivedDevice.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: '#1D1D1B',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    }}>
-    <ArchivedDevice.Screen
-      name="Edit Device"
-      component={EditDevice}
-      options={{
-        title: 'Edit Device',
-        headerLeft: () => (
-          <Icon3.Button
-            name="long-arrow-left"
-            size={30}
-            backgroundColor="#1D1D1B"
-            onPress={() => navigation.goBack()}
-          />
-        ),
-      }}
-    />
-  </ArchivedDevice.Navigator>
-);
 const AccountStack = ({navigation}) => (
   <Account.Navigator
     screenOptions={{
@@ -290,10 +260,7 @@ const App = () => {
                 name="ArchivedScreen"
                 component={ArchivedScreen2}
               />
-              <Drawer.Screen
-                name="EditDevice"
-                component={ArchivedDevicesStack}
-              />
+              <Drawer.Screen name="EditDevice" component={EditDevice} />
               <Drawer.Screen name="DeviceInfor" component={DeviceInfo} />
               <Drawer.Screen name="Account" component={AccountStack} />
             </Drawer.Navigator>

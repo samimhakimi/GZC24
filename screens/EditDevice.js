@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -18,8 +19,12 @@ import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import Toast from 'react-native-tiny-toast';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const EditDevice = props => {
+const EditDevice = ({route, navigation}) => {
+  const {id} = route.params;
+  const deviceId = JSON.stringify(id.id);
+
   useEffect(() => {
     const fetchData = async () => {
       const user_id = await AsyncStorage.getItem('id');
@@ -34,10 +39,10 @@ const EditDevice = props => {
   const [data, setData] = React.useState({
     user_id: '',
     api_key: '',
-    gzc24Id: '',
+    gzc24Id: deviceId,
     ShipmentName: '',
-    minTemprature: -10,
-    maxTemprature: 40,
+    minTemprature: '-10',
+    maxTemprature: '40',
     plateNumber: '',
     transport_company: '',
     from: '',
@@ -45,30 +50,6 @@ const EditDevice = props => {
     typeOfGood: '',
     isIdProvided: true,
   });
-
-  const handleGzc24IdChange = val => {
-    if (val.trim().length != 0) {
-      setData({
-        ...data,
-        gzc24Id: val,
-        isIdProvided: true,
-      });
-    } else if (typeof val == 'number') {
-      setData({
-        ...data,
-        gzc24Id: val,
-        isIdProvided: false,
-      });
-    } else {
-      setData({
-        ...data,
-        gzc24Id: '',
-        isIdProvided: false,
-      });
-
-      Alert.alert('Only Numbers allowed');
-    }
-  };
 
   const handleShipmentName = val => {
     setData({
@@ -126,19 +107,6 @@ const EditDevice = props => {
   };
 
   const addNow = async () => {
-    //{
-    // "user_id":"1",
-    // "api_key":"10470c3b4b",
-    // "shipment_name":"shipment name",
-    // "min":5,
-    // "max":30,
-    // "shipped_from":"Adana",
-    // "shipped_to":"stockholm",
-    // "transport_company":"Gokdeniz",
-    // "goods":"Strawberries",
-    // "plate_no":"35 ABC 221"
-    // }
-
     const deviceData = {
       user_id: data.user_id,
       api_key: data.api_key,
@@ -153,15 +121,15 @@ const EditDevice = props => {
     };
 
     await axios
-      .put(
-        'https://www.gzc24.com/api-mobi/device/update/' + data.gzc24Id,
-        deviceData,
-      )
+      .put('https://www.gzc24.com/api-mobi/device/update/' + id.id, deviceData)
       .then(res => {
         const toast = Toast.showLoading('Loading...');
         setTimeout(() => {
           Toast.hide(toast);
-          Toast.show('Device Updated Succesfully...');
+          Toast.showSuccess('Device Updated Succesfully...');
+          clearState();
+
+          navigation.navigate('Home');
         }, 1000);
       })
       .catch(err => {
@@ -169,98 +137,129 @@ const EditDevice = props => {
       });
   };
 
+  const clearState = () => {
+    textInput.clear();
+    textInput2.clear();
+    textInput3.clear();
+    textInput4.clear();
+    textInput5.clear();
+    textInput6.clear();
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={Platform.select({ios: 100, android: 500})}
-        style={styles.container}>
-        <ScrollView
-          contentContainerStyle={{flexGrow: 1}}
-          keyboardShouldPersistTaps="handled">
-          <StatusBar barStyle="light-content" />
-          <View>
-            <View style={styles.textInputDesign}>
-              <TextInput
-                style={styles.textInput}
-                placeholder="GZC24ID"
-                keyboardType="number-pad"
-                maxLength={8}
-                onChangeText={val => handleGzc24IdChange(val)}
-              />
+    <>
+      <SafeAreaView style={{backgroundColor: '#1D1D1B'}} />
+      <View style={styles.goBack}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon.Button
+            name="long-arrow-left"
+            size={35}
+            backgroundColor="#1D1D1B"
+            onPress={() => navigation.goBack()}
+          />
+        </TouchableOpacity>
+      </View>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : null}
+          keyboardVerticalOffset={Platform.select({ios: 100, android: 500})}
+          style={styles.container}>
+          <ScrollView
+            contentContainerStyle={{flexGrow: 1}}
+            keyboardShouldPersistTaps="handled">
+            <StatusBar barStyle="light-content" />
+            <View>
+              <View style={styles.textInputDesign}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder={deviceId}
+                  editable={false}
+                  selectTextOnFocus={false}
+                />
 
-              {data.isIdProvided ? null : (
-                <Animatable.View animation="fadeInLeft" duration={500}>
-                  <Text style={styles.errorMsg}>GZC24 id is Mandatory.</Text>
-                </Animatable.View>
-              )}
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Shipment Name"
+                  ref={input => {
+                    this.textInput = input;
+                  }}
+                  onChangeText={val => handleShipmentName(val)}
+                />
+              </View>
+              <Text style={styles.alertLimits}>Alert Limits</Text>
 
-              <TextInput
-                style={styles.textInput}
-                placeholder="Shipment Name"
-                onChangeText={val => handleShipmentName(val)}
-              />
+              <View style={styles.textInputDesign}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Min. Temperature Limit (°C)"
+                  keyboardType="number-pad"
+                  onChangeText={val => handleMinTemprature(val)}
+                />
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Max. Tempretaure Limit (°C)"
+                  keyboardType="number-pad"
+                  onChangeText={val => handleMaxTemprature(val)}
+                />
+              </View>
+              <Text style={styles.alertLimits}>Shipping Info</Text>
+              <View style={styles.textInputDesign}>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Truck Plate Number"
+                  ref={input => {
+                    this.textInput4 = input;
+                  }}
+                  onChangeText={val => handleTruckNumber(val)}
+                />
+
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Transport Company"
+                  ref={input => {
+                    this.textInput3 = input;
+                  }}
+                  onChangeText={val => handleTCompany(val)}
+                />
+
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="From"
+                  ref={input => {
+                    this.textInput2 = input;
+                  }}
+                  onChangeText={val => handleFrom(val)}
+                />
+
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="To"
+                  ref={input => {
+                    this.textInput5 = input;
+                  }}
+                  onChangeText={val => handleTo(val)}
+                />
+
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Type of Good"
+                  ref={input => {
+                    this.textInput6 = input;
+                  }}
+                  onChangeText={val => handleTypeOfGood(val)}
+                />
+              </View>
+
+              <TouchableOpacity style={styles.addNewDevice} onPress={addNow}>
+                <Text style={styles.addNewDeviceText}>
+                  <FontAwesome name="plus-circle" size={18} /> Update
+                </Text>
+              </TouchableOpacity>
             </View>
-            <Text style={styles.alertLimits}>Alert Limits</Text>
-
-            <View style={styles.textInputDesign}>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Min. Temperature Limit (°C)"
-                defaultValue="-10"
-                keyboardType="number-pad"
-                onChangeText={val => handleMinTemprature(val)}
-              />
-              <TextInput
-                style={styles.textInput}
-                placeholder="Max. Tempretaure Limit (°C)"
-                defaultValue="40"
-                keyboardType="number-pad"
-                onChangeText={val => handleMaxTemprature(val)}
-              />
-            </View>
-            <Text style={styles.alertLimits}>Shipping Info</Text>
-            <View style={styles.textInputDesign}>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Truck Plate Number"
-                onChangeText={val => handleTruckNumber(val)}
-              />
-
-              <TextInput
-                style={styles.textInput}
-                placeholder="Transport Company"
-                onChangeText={val => handleTCompany(val)}
-              />
-
-              <TextInput
-                style={styles.textInput}
-                placeholder="From"
-                onChangeText={val => handleFrom(val)}
-              />
-
-              <TextInput
-                style={styles.textInput}
-                placeholder="To"
-                onChangeText={val => handleTo(val)}
-              />
-
-              <TextInput
-                style={styles.textInput}
-                placeholder="Type of Good"
-                onChangeText={val => handleTypeOfGood(val)}
-              />
-            </View>
-
-            <TouchableOpacity style={styles.addNewDevice} onPress={addNow}>
-              <Text style={styles.addNewDeviceText}>
-                <FontAwesome name="plus-circle" size={18} /> Update
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </>
   );
 };
 
@@ -277,6 +276,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     borderBottomWidth: 1,
+  },
+  goBack: {
+    width: '100%',
+    backgroundColor: '#1D1D1B',
+    height: '6%',
   },
   alertLimits: {
     textAlign: 'center',
