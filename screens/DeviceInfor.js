@@ -113,7 +113,7 @@ const DeviceInfor = ({route, navigation}) => {
     };
 
     fetchData();
-  }, []);
+  }, [deviceTable]);
 
   const [page, setPage] = React.useState(1);
 

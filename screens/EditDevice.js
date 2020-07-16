@@ -49,6 +49,20 @@ const EditDevice = ({route, navigation}) => {
     isIdProvided: true,
   });
 
+  const [notifyUserData, setNotifyUserData] = React.useState({
+    email: '',
+    notifyUserBtn: true,
+    color: '',
+  });
+
+  const handleNotifyUser = val => {
+    setNotifyUserData({
+      ...notifyUserData,
+      email: val,
+      notifyUserBtn: false,
+    });
+  };
+
   const handleShipmentName = val => {
     setData({
       ...data,
@@ -135,6 +149,25 @@ const EditDevice = ({route, navigation}) => {
       });
   };
 
+  const notify = async () => {
+    const notifyUser = {
+      user_id: data.user_id,
+      api_key: data.api_key,
+      viewers: notifyUserData.email,
+    };
+
+    await axios
+      .put('https://www.gzc24.com/api-mobi/device/viewers/' + id.id, notifyUser)
+      .then(res => {
+        Toast.showSuccess('User Notification is enabled');
+        clearState();
+      })
+      .catch(err => {
+        Toast.show('Error');
+        clearState();
+      });
+  };
+
   const clearState = () => {
     textInput.clear();
     textInput2.clear();
@@ -142,6 +175,7 @@ const EditDevice = ({route, navigation}) => {
     textInput4.clear();
     textInput5.clear();
     textInput6.clear();
+    textInput7.clear();
   };
 
   return (
@@ -184,6 +218,23 @@ const EditDevice = ({route, navigation}) => {
                   onChangeText={val => handleShipmentName(val)}
                 />
               </View>
+              <TextInput
+                placeholder="Email Address"
+                style={styles.notifyUser}
+                onChangeText={val => handleNotifyUser(val)}
+                ref={input => {
+                  this.textInput7 = input;
+                }}
+              />
+              <TouchableOpacity
+                disabled={notifyUserData.notifyUserBtn}
+                onPress={notify}
+                style={styles.notifyUserBtn}>
+                <Text style={styles.addNewDeviceText}>
+                  <FontAwesome name="info-circle" size={18} />
+                  {'  '}Notify User
+                </Text>
+              </TouchableOpacity>
               <Text style={styles.alertLimits}>Alert Limits</Text>
 
               <View style={styles.textInputDesign}>
@@ -275,6 +326,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderBottomWidth: 1,
   },
+  notifyUser: {
+    padding: 10,
+    width: '50%',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderWidth: 2,
+  },
   goBack: {
     width: '100%',
     backgroundColor: '#1D1D1B',
@@ -299,6 +358,14 @@ const styles = StyleSheet.create({
     padding: 10,
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  notifyUserBtn: {
+    marginTop: 8,
+    backgroundColor: '#FDEF69',
+    borderRadius: 10,
+    width: '40%',
+    alignContent: 'center',
+    alignSelf: 'center',
   },
 
   textInputDesign: {
