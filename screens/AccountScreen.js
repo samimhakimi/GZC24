@@ -7,8 +7,7 @@ import {
   TextInput,
   Keyboard,
   TouchableWithoutFeedback,
-  ScrollView,
-  TouchableOpacity,
+  ScrollView, 
   KeyboardAvoidingView,
 } from 'react-native';
 

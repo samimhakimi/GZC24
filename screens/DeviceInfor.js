@@ -15,9 +15,11 @@ import {
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView from 'react-native-maps';
+import {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import HighchartsReactNative from '@highcharts/highcharts-react-native';
 import Datatable from './Datatable';
+
 const DismissKeyboard = ({children}) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     {children}
@@ -92,7 +94,7 @@ const DeviceInfor = ({route, navigation}) => {
           setDeviceInfo(res.data);
         })
         .catch(err => {
-          Alert.alert('Error Please try agian...');
+          Alert.alert('Network error, please try again.');
         });
 
       await axios

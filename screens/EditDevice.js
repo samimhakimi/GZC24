@@ -10,12 +10,10 @@ import {
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Alert,
   SafeAreaView,
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
-import * as Animatable from 'react-native-animatable';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import Toast from 'react-native-tiny-toast';

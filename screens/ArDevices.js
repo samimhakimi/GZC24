@@ -1,31 +1,13 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
 
-export default function ArDevices({item, navigation}) {
-  useEffect(() => {
-    const fetchData = async () => {
-      const user_id = await AsyncStorage.getItem('id');
-      const api_key = await AsyncStorage.getItem('api_key');
-
-      setData({user_id: user_id, api_key: api_key});
-    };
-
-    fetchData();
-  }, []);
-
+export default function ArDevices({item}) {
   var tempColor = item.last_alarm_status;
   if (tempColor == 'ok') {
     tempColor = 'green';
   } else {
     tempColor = 'red';
   }
-
-  const [data, setData] = React.useState({
-    user_id: '',
-    api_key: '',
-  });
 
   return (
     <TouchableOpacity>

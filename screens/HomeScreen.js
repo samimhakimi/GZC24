@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, StatusBar, FlatList} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-import Devices from './Devices';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';

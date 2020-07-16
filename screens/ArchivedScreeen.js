@@ -3,7 +3,6 @@ import {View, Text, StyleSheet, StatusBar, FlatList} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import ArDevices from './ArDevices';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const HomeScreen = ({navigation}) => {

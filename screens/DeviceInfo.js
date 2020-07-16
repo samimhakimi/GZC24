@@ -3,32 +3,20 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TextInput,
   Platform,
   StyleSheet,
-  StatusBar,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
   ScrollView,
-  Dimensions,
   SafeAreaView,
   Alert,
   ActivityIndicator,
-  Button,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import HighchartsReactNative from '@highcharts/highcharts-react-native';
-//import {DataTable} from 'react-native-paper';
+
 import Datatable from './Datatable';
-const DismissKeyboard = ({children}) => (
-  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-    {children}
-  </TouchableWithoutFeedback>
-);
 
 const DeviceInfo = ({navigation, route}) => {
   const [lat, setLat] = useState();
@@ -98,7 +86,7 @@ const DeviceInfo = ({navigation, route}) => {
           setDeviceInfo(res.data);
         })
         .catch(err => {
-          Alert.alert('Error Please try agian...');
+          Alert.alert('Network error, please try agian...');
         });
 
       await axios
@@ -112,7 +100,7 @@ const DeviceInfo = ({navigation, route}) => {
           }
         })
         .catch(err => {
-          Alert.alert('All, Error Please try agian...');
+          Alert.alert('Network error, please try agian...');
         });
     };
 
