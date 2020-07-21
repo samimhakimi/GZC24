@@ -21,10 +21,15 @@ import Datatable from './Datatable';
 const DeviceInfo = ({navigation, route}) => {
   const [lat, setLat] = useState();
   const [long, setLong] = useState();
-  const [table, setTable] = useState(false);
+  const [animating, setAnimating] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [loading2, setLoading2] = useState(false);
 
   const {id} = route.params;
   const modalId = JSON.stringify(id.id);
+
+  const closeActivityIndicator = () =>
+    setTimeout(() => setAnimating(false), 3000);
 
   const [device, setDeviceInfo] = useState([
     {
@@ -87,11 +92,16 @@ const DeviceInfo = ({navigation, route}) => {
   };
 
   useEffect(() => {
+    closeActivityIndicator();
+  });
+
+  useEffect(() => {
     const fetchData = async () => {
       await axios
-        .get('https://gzc24.com/api-mobi/device/info/' + modalId)
+        .get('https://gzc24.com/api-mobi/device/info/' + id.id)
         .then(res => {
           setDeviceInfo(res.data);
+          setLoading(true);
         })
         .catch(err => {
           Alert.alert('Network error, please try agian...');
@@ -102,9 +112,9 @@ const DeviceInfo = ({navigation, route}) => {
         .then(res => {
           if (res.data != 'error') {
             setDeviceTable(res.data);
-            setTable(true);
             setLat(res.data[0].lat);
             setLong(res.data[0].lng);
+            setLoading2(true);
           }
         })
         .catch(err => {
@@ -115,27 +125,9 @@ const DeviceInfo = ({navigation, route}) => {
     fetchData();
   }, []);
 
-  const [page, setPage] = React.useState(2);
+  const [page, setPage] = React.useState(1);
 
-  if (deviceTable.length < 2) {
-    return (
-      <View style={styles.ActivityIndicator}>
-        <ActivityIndicator size="large" />
-        <TouchableOpacity>
-          <Text style={styles.goBackk}>Please Wait...</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  } else if (device.length < 2) {
-    return (
-      <View style={styles.ActivityIndicator}>
-        <ActivityIndicator size="large" />
-        <TouchableOpacity>
-          <Text style={styles.goBackk}>Please Wait...</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  } else {
+  if (loading && loading2) {
     return (
       <>
         <SafeAreaView style={{backgroundColor: '#1D1D1B'}} />
@@ -227,15 +219,17 @@ const DeviceInfo = ({navigation, route}) => {
             <View
               style={{
                 width: '80%',
-                height: '30%',
+                height: '20%',
               }}>
-              <HighchartsReactNative
-                styles={styles.container2}
-                options={options}
-                useCDN={true}
-                useSSL={true}
-                loader={true}
-              />
+              {finalArray.length > 2 ? (
+                <HighchartsReactNative
+                  styles={styles.container2}
+                  options={options}
+                  useCDN={true}
+                  useSSL={true}
+                  loader={true}
+                />
+              ) : null}
             </View>
             <View
               style={{
@@ -244,27 +238,53 @@ const DeviceInfo = ({navigation, route}) => {
                 justifyContent: 'center',
                 alignSelf: 'center',
               }}>
-              {table && (
-                <Datatable
-                  header={[
-                    {
-                      name: 'Date/Time',
-                      attr: 'date',
-                    },
-                    {
-                      name: 'Temperature',
-                      attr: 'temp',
-                    },
-                  ]}
-                  datatable={deviceTable}
-                  page={page}
-                  perPage={4}
-                  style={{backgroundColor: '#fff'}}
-                />
-              )}
+              <Datatable
+                header={[
+                  {
+                    name: 'Date/Time',
+                    attr: 'date',
+                  },
+                  {
+                    name: 'Temperature',
+                    attr: 'temp',
+                  },
+                ]}
+                datatable={deviceTable}
+                page={page}
+                perPage={8}
+                style={{backgroundColor: '#fff'}}
+              />
             </View>
           </View>
         </ScrollView>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <SafeAreaView style={{backgroundColor: '#1D1D1B'}} />
+        <View style={styles.goBack}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Icon.Button
+              name="long-arrow-left"
+              size={35}
+              backgroundColor="#1D1D1B"
+              onPress={() => navigation.goBack()}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.waitContainer}>
+          <Text>henüz hiçbir veri mevcut değil</Text>
+        </View>
+        {/* 
+        <View style={styles.ActivityIndicator}>
+          <ActivityIndicator
+            animating={animating}
+            color="#bc2b78"
+            size="large"
+            style={styles.activityIndicator}
+          />
+        </View> */}
       </>
     );
   }
@@ -276,6 +296,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  waitContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   goBack: {
     width: '100%',
@@ -314,7 +339,7 @@ const styles = StyleSheet.create({
   },
   map: {
     height: '55%',
-    margin: 20,
+    margin: 12,
     borderRadius: 10,
   },
   temprature: {

@@ -128,10 +128,8 @@ const SignInScreen = ({navigation}) => {
             return true;
           }
         });
-
         AsyncStorage.setItem('id', res.data.id);
         AsyncStorage.setItem('api_key', res.data.api_key);
-
         const toast = Toast.showLoading('Loading...');
         setTimeout(() => {
           Toast.hide(toast);
@@ -148,7 +146,6 @@ const SignInScreen = ({navigation}) => {
       .get(`https://gzc24.com/api-mobi/device/data/${id}/all`)
       .then(res => {
         if (res.data != 'error') {
-          setModalVisible(false);
           const toast = Toast.showLoading('Loading...');
           navigation.navigate('DeviceInfo', {
             id: {id: searchId},
@@ -168,6 +165,7 @@ const SignInScreen = ({navigation}) => {
   const [searchId, setSearchId] = useState(null);
 
   const anotherScreen = () => {
+    setModalVisible(false);
     idHandle(searchId);
   };
 
@@ -207,7 +205,6 @@ const SignInScreen = ({navigation}) => {
             swipeThreshold={100}
             onSwipeOut={() => setModalVisible(false)}>
             <ModalContent>
-              <Text style={styles.modalSearchText}>Search</Text>
               <TextInput
                 keyboardType="number-pad"
                 onChangeText={e => setSearchId(e)}
