@@ -143,18 +143,32 @@ const SignInScreen = ({navigation}) => {
       });
   };
 
+  const idHandle = async id => {
+    await axios
+      .get(`https://gzc24.com/api-mobi/device/data/${id}/all`)
+      .then(res => {
+        if (res.data != 'error') {
+          setModalVisible(false);
+          const toast = Toast.showLoading('Loading...');
+          navigation.navigate('DeviceInfo', {
+            id: {id: searchId},
+          });
+          setTimeout(() => {
+            Toast.hide(toast);
+          }, 1000);
+        }
+      })
+      .catch(err => {
+        setModalVisible(false);
+        Toast.show('Geçersiz cihaz ID nosu.');
+      });
+  };
+
   const [isModalVisible, setModalVisible] = useState(false);
   const [searchId, setSearchId] = useState(null);
 
   const anotherScreen = () => {
-    if (searchId != null) {
-      navigation.navigate('DeviceInfo', {
-        id: {id: searchId},
-      });
-      setModalVisible(false);
-    } else {
-      Alert.alert('Device id required!');
-    }
+    idHandle(searchId);
   };
 
   return (

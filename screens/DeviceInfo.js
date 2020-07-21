@@ -29,13 +29,13 @@ const DeviceInfo = ({navigation, route}) => {
   const [device, setDeviceInfo] = useState([
     {
       date: '13.05.2020 01:29',
-      temp: '15.3',
+      temp: '15.0',
       lat: '55.912278',
       lng: '39.124434',
     },
     {
       date: '13.05.2020 01:29',
-      temp: '15.3111',
+      temp: '1',
       lat: '55.912278',
       lng: '39.124434',
     },
@@ -43,31 +43,39 @@ const DeviceInfo = ({navigation, route}) => {
   const [deviceTable, setDeviceTable] = useState([
     {
       date: '13.05.2020 01:29',
-      temp: '15.3',
+      temp: '1',
       lat: '55.912278',
       lng: '39.124434',
     },
     {
-      date: '13.05.2020 01:29',
-      temp: '15.3',
+      date: '13.15.2020 01:29',
+      temp: '1',
       lat: '55.912278',
       lng: '39.124434',
     },
   ]);
 
-  var finalArray = deviceTable.map(function(obj) {
-    return parseFloat(obj.temp);
-  });
+  var finalArray = deviceTable
+    .map(function(obj) {
+      return parseFloat(obj.temp);
+    })
+    .reverse();
   var finalArray2 = deviceTable.map(function(obj) {
     return obj.date;
   });
 
   const options = {
     title: {
-      text: 'Temprerature',
+      text: 'Sıcaklık Grafiği',
+    },
+    credits: {
+      enabled: false,
     },
     xAxis: {
       categories: finalArray2,
+      scrollbar: {
+        enabled: true,
+      },
     },
     maxPadding: 0.05,
     series: [
@@ -90,9 +98,9 @@ const DeviceInfo = ({navigation, route}) => {
         });
 
       await axios
-        .get(`https://gzc24.com/api-mobi/device/data/${modalId}/all`)
+        .get(`https://gzc24.com/api-mobi/device/data/${id.id}/all`)
         .then(res => {
-          if (res.data[0].temp != null) {
+          if (res.data != 'error') {
             setDeviceTable(res.data);
             setTable(true);
             setLat(res.data[0].lat);
@@ -107,9 +115,9 @@ const DeviceInfo = ({navigation, route}) => {
     fetchData();
   }, []);
 
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(2);
 
-  if (deviceTable.length == 0) {
+  if (deviceTable.length < 2) {
     return (
       <View style={styles.ActivityIndicator}>
         <ActivityIndicator size="large" />
@@ -118,7 +126,7 @@ const DeviceInfo = ({navigation, route}) => {
         </TouchableOpacity>
       </View>
     );
-  } else if (device.length == 0) {
+  } else if (device.length < 2) {
     return (
       <View style={styles.ActivityIndicator}>
         <ActivityIndicator size="large" />
@@ -152,16 +160,34 @@ const DeviceInfo = ({navigation, route}) => {
               </View>
               <View>
                 <Text style={styles.plateNumber}>
-                  Plate No: {'                  '} {device.plate_no}
+                  {device.plate_no
+                    ? 'Plaka No:              ' + device.plate_no
+                    : null}
                 </Text>
                 <Text style={styles.fromTo}>
-                  From / To{'         '} {device.shipped_from} /{' '}
-                  {device.shipped_to}
+                  {device.shipped_from
+                    ? 'Nereden / Gideceği Yer    \n      ' +
+                      device.shipped_from +
+                      '   / ' +
+                      device.shipped_to
+                    : null}
                 </Text>
 
                 <Text style={styles.minMax}>
-                  Min / Max {'                  '} {device.limit_min} ..{' '}
-                  {device.limit_max} °C
+                  {device.transport_company
+                    ? 'Nakliyeci:              ' + device.transport_company
+                    : null}
+                </Text>
+                <Text style={styles.minMax}>
+                  {device.goods
+                    ? 'Ürün Cinsi:              ' + device.goods
+                    : null}
+                </Text>
+
+                <Text style={styles.minMax}>
+                  {device.start_date
+                    ? 'Başlama Tarihi:              ' + device.start_date
+                    : null}
                 </Text>
               </View>
 
@@ -204,7 +230,6 @@ const DeviceInfo = ({navigation, route}) => {
                 height: '30%',
               }}>
               <HighchartsReactNative
-                provider={PROVIDER_GOOGLE}
                 styles={styles.container2}
                 options={options}
                 useCDN={true}
@@ -229,7 +254,6 @@ const DeviceInfo = ({navigation, route}) => {
                     {
                       name: 'Temperature',
                       attr: 'temp',
-                      sortDirection: 'ascending',
                     },
                   ]}
                   datatable={deviceTable}
@@ -263,25 +287,24 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS == 'android' ? '10%' : 10,
     fontWeight: 'bold',
     textAlign: 'center',
-    margin: 10,
   },
   plateNumber: {
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
-    margin: 10,
+    margin: 4,
   },
   fromTo: {
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
-    margin: 10,
+    margin: 4,
   },
   minMax: {
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
-    margin: 10,
+    margin: 2,
   },
   location: {
     fontSize: 20,

@@ -88,7 +88,7 @@ const AddNewDeviceStack = ({navigation}) => (
         title: 'Add New Device',
         headerLeft: () => (
           <Icon3.Button
-            name="long-arrow-left"
+            name="arrow-left"
             size={30}
             backgroundColor="#1D1D1B"
             onPress={() => navigation.goBack()}
@@ -117,7 +117,7 @@ const AccountStack = ({navigation}) => (
         title: 'Account',
         headerLeft: () => (
           <Icon3.Button
-            name="long-arrow-left"
+            name="arrow-left"
             size={30}
             backgroundColor="#1D1D1B"
             onPress={() => navigation.goBack()}
@@ -146,7 +146,7 @@ const ArchivedScreen2 = ({navigation}) => (
         title: 'ArchivedScreen',
         headerLeft: () => (
           <Icon3.Button
-            name="long-arrow-left"
+            name="arrow-left"
             size={30}
             backgroundColor="#1D1D1B"
             onPress={() => navigation.goBack()}

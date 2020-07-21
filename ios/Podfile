@@ -78,7 +78,6 @@ target 'GZC24' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
 
-  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
 
   target 'GZC24Tests' do
     inherit! :complete
