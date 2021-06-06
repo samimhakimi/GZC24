@@ -33,7 +33,7 @@ import Toast from 'react-native-tiny-toast';
 import Users from '../model/users';
 
 const DismissKeyboard = ({children}) => (
-  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}> // Should be noted for J App.
     {children}
   </TouchableWithoutFeedback>
 );
